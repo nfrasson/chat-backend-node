@@ -1,0 +1,14 @@
+{
+    "name": "socketio-docker",
+    "version": "1.0.0",
+    "description": "A Socket.io server running inside a Docker container",
+    "main": "index.js",
+    "dependencies": {
+      "express": "^4.17.1",
+      "socket.io": "^4.3.2"
+    },
+    "scripts": {
+      "start": "node index.js"
+    }
+  }
+  

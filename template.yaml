@@ -1,0 +1,148 @@
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    CodeUri: "src/"
+    Timeout: 30
+    Architectures:
+      - x86_64
+    Runtime: nodejs18.x
+    MemorySize: 256
+    Tracing: Active
+
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - API Gateway From Stack ${AWS::StackName}
+        - ResourceName: Api
+      StageName: dev
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        AllowOrigin: "'*'"
+        AllowMethods: "'*'"
+        AllowHeaders: "'content-type'"
+      Auth:
+        Authorizers:
+          chatAuthorizer:
+            FunctionPayloadType: REQUEST
+            FunctionArn:
+              Fn::GetAtt:
+                - authorizer
+                - Arn
+            Identity:
+              Headers:
+                - Authorization
+        DefaultAuthorizer: chatAuthorizer
+
+  authorizer:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-authorizer
+      Handler: handlers/Auth/authorizer.handler
+      Layers:
+        - !Ref LayerAuth
+      Policies:
+        - AmazonSSMReadOnlyAccess
+
+  userLogin:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-userLogin
+      Handler: handlers/User/userLogin.handler
+      Layers:
+        - !Ref LayerUser
+      Policies:
+        - AmazonSSMReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user/login
+            Method: POST
+            Auth:
+              Authorizer: NONE
+            RestApiId: !Ref Api
+
+  userRegister:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-userRegister
+      Handler: handlers/User/userRegister.handler
+      Layers:
+        - !Ref LayerUser
+      Policies:
+        - AmazonSSMReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user/register
+            Method: POST
+            Auth:
+              Authorizer: NONE
+            RestApiId: !Ref Api
+
+  chatList:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-chatList
+      Handler: handlers/Chat/chatList.handler
+      Layers:
+        - !Ref LayerChat
+      Policies:
+        - AmazonSSMReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /chat/list
+            Method: GET
+            RestApiId: !Ref Api
+
+  chatCreate:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers/Chat/chatCreate.handler
+      FunctionName: !Sub ${AWS::StackName}-chatCreate
+      Layers:
+        - !Ref LayerChat
+      Policies:
+        - AmazonSSMReadOnlyAccess
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /chat
+            Method: POST
+            RestApiId: !Ref Api
+
+  LayerChat:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: layerChat
+      RetentionPolicy: Delete
+      ContentUri: layers/layerChat/nodejs.zip
+      CompatibleRuntimes:
+        - nodejs18.x
+
+  LayerUser:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: layerUser
+      RetentionPolicy: Delete
+      ContentUri: layers/layerUser/nodejs.zip
+      CompatibleRuntimes:
+        - nodejs18.x
+
+  LayerAuth:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: layerAuth
+      RetentionPolicy: Delete
+      ContentUri: layers/layerAuth/nodejs.zip
+      CompatibleRuntimes:
+        - nodejs18.x
