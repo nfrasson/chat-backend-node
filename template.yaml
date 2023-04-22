@@ -36,7 +36,6 @@ Resources:
             Identity:
               Headers:
                 - Authorization
-        DefaultAuthorizer: chatAuthorizer
 
   authorizer:
     Type: AWS::Serverless::Function
@@ -63,8 +62,6 @@ Resources:
           Properties:
             Path: /user/login
             Method: POST
-            Auth:
-              Authorizer: NONE
             RestApiId: !Ref Api
 
   userRegister:
@@ -82,8 +79,6 @@ Resources:
           Properties:
             Path: /user/register
             Method: POST
-            Auth:
-              Authorizer: NONE
             RestApiId: !Ref Api
 
   chatList:
@@ -101,6 +96,8 @@ Resources:
           Properties:
             Path: /chat/list
             Method: GET
+            Auth:
+              Authorizer: chatAuthorizer
             RestApiId: !Ref Api
 
   chatCreate:
@@ -118,6 +115,8 @@ Resources:
           Properties:
             Path: /chat
             Method: POST
+            Auth:
+              Authorizer: chatAuthorizer
             RestApiId: !Ref Api
 
   LayerChat:
@@ -146,3 +145,24 @@ Resources:
       ContentUri: layers/layerAuth/nodejs.zip
       CompatibleRuntimes:
         - nodejs18.x
+
+Outputs:
+  MyApiGatewayUrl:
+    Description: URL of the API Gateway
+    Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev"
+
+  loginFunctionUrl:
+    Description: "POST /user/login"
+    Value: !Sub "POST ${Api}/user/login"
+
+  registerFunctionUrl:
+    Description: "POST /user/register"
+    Value: !Sub "POST ${Api}/user/register"
+
+  chatListFunctionUrl:
+    Description: "GET /chat/list"
+    Value: !Sub "POST ${Api}/chat/list"
+
+  chatCreateFunctionUrl:
+    Description: "POST /chat/create"
+    Value: !Sub "POST ${Api}/chat/create"
