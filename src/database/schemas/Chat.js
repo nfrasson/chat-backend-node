@@ -5,6 +5,10 @@ const Chat = new mongoose.Schema({
   chatDescription: String,
   chatID: { type: String, unique: true, index: true },
   chatUsersID: [String],
+  chatKind: {
+    type: String,
+    enum: ["personal", "group"],
+  },
   chatMessagesHistory: [
     {
       messageSenderID: String,
