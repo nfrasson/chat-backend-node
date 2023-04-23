@@ -113,7 +113,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /chat
+            Path: /chat/create
             Method: POST
             Auth:
               Authorizer: chatAuthorizer
@@ -147,22 +147,18 @@ Resources:
         - nodejs18.x
 
 Outputs:
-  MyApiGatewayUrl:
-    Description: URL of the API Gateway
-    Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev"
-
   loginFunctionUrl:
     Description: "POST /user/login"
-    Value: !Sub "POST ${Api}/user/login"
+    Value: !Sub "POST https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev/user/login"
 
   registerFunctionUrl:
     Description: "POST /user/register"
-    Value: !Sub "POST ${Api}/user/register"
+    Value: !Sub "POST https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev/user/register"
 
   chatListFunctionUrl:
     Description: "GET /chat/list"
-    Value: !Sub "POST ${Api}/chat/list"
+    Value: !Sub "POST https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev/chat/list"
 
   chatCreateFunctionUrl:
     Description: "POST /chat/create"
-    Value: !Sub "POST ${Api}/chat/create"
+    Value: !Sub "POST https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev/chat/create"
