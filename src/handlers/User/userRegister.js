@@ -18,7 +18,7 @@ module.exports.handler = async (event) => {
 
     const alreadyRegistered = await database
       .model(UserSchema.name)
-      .findOne({ email: body.email })
+      .findOne({ userEmail: body.userEmail })
       .lean();
 
     if (alreadyRegistered) throw new errors.DuplicatedRegisterError();
@@ -29,7 +29,7 @@ module.exports.handler = async (event) => {
       .model(UserSchema.name)({
         ...body,
         userID: generatedUserID,
-        password: await createHash(body.password),
+        userPassword: await createHash(body.userPassword),
       })
       .save();
 

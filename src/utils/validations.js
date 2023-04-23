@@ -16,6 +16,7 @@ module.exports = {
     chatTitle: Joi.string().required(),
     chatDescription: Joi.string().required(),
     chatUsersID: Joi.array().items(Joi.string()).required(),
+    chatKind: Joi.string().valid("personal", "group").required(),
   }),
   chatListValidation: Joi.object().keys({
     userID: Joi.string().guid().required(),
@@ -25,15 +26,15 @@ module.exports = {
     perPage: Joi.number().min(1).max(200).default(10),
   }),
   userLoginValidation: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string()
+    userEmail: Joi.string().email().required(),
+    userPassword: Joi.string()
       .pattern(/^[a-zA-Z0-9]{8,30}$/)
       .required(),
   }),
   userRegisterValidation: Joi.object().keys({
-    name: Joi.string().min(3).max(30).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string()
+    userName: Joi.string().min(3).max(30).required(),
+    userEmail: Joi.string().email().required(),
+    userPassword: Joi.string()
       .pattern(/^[a-zA-Z0-9]{8,30}$/)
       .required(),
   }),

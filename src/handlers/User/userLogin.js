@@ -10,15 +10,15 @@ const { handleError, handleReturn } = require("../../utils/handlers");
 
 module.exports.handler = async (event) => {
   try {
-    const { email, password } = validateSchema(userLoginValidation, event);
+    const { userEmail, userPassword } = validateSchema(userLoginValidation, event);
 
     const database = await databaseConnect(UserSchema);
     const userData = await database
       .model(UserSchema.name)
-      .findOne({ email })
+      .findOne({ userEmail })
       .lean();
 
-    await comparePassword(password, userData?.password || "");
+    await comparePassword(userPassword, userData?.userPassword || "");
 
     const token = JWT.sign(
       {

@@ -14,45 +14,45 @@ describe("POST /user/register", () => {
     {
       name: "Missing no properties",
       input: {
-        name: "Testing Name",
-        email: randomEmail,
-        password: randomPassword,
+        userName: "Testing Name",
+        userEmail: randomEmail,
+        userPassword: randomPassword,
       },
       expectedStatusCode: 201,
     },
     {
       name: "Missing 'name' property",
-      input: { email: randomEmail, password: randomPassword },
+      input: { userEmail: randomEmail, userPassword: randomPassword },
       expectedStatusCode: 400,
     },
     {
       name: "Missing 'email' property",
-      input: { name: "Testing Name", password: randomPassword },
+      input: { userName: "Testing Name", userPassword: randomPassword },
       expectedStatusCode: 400,
     },
     {
       name: "Missing 'password' property",
       input: {
-        name: "Testing Name",
-        email: randomEmail,
+        userName: "Testing Name",
+        userEmail: randomEmail,
       },
       expectedStatusCode: 400,
     },
     {
       name: "Email with incorrect pattern",
       input: {
-        name: "Testing Name",
-        email: randomWrongEmail,
-        password: randomPassword,
+        userName: "Testing Name",
+        userEmail: randomWrongEmail,
+        userPassword: randomPassword,
       },
       expectedStatusCode: 400,
     },
     {
       name: "Password with incorrect lenght",
       input: {
-        name: "Testing Name",
-        email: randomEmail,
-        password: randomWrongPassword,
+        userName: "Testing Name",
+        userEmail: randomEmail,
+        userPassword: randomWrongPassword,
       },
       expectedStatusCode: 400,
     },
@@ -72,34 +72,34 @@ describe("POST /user/login", () => {
     {
       name: "Missing no properties",
       input: {
-        email: randomEmail,
-        password: randomPassword,
+        userEmail: randomEmail,
+        userPassword: randomPassword,
       },
       expectedStatusCode: 200,
     },
     {
       name: "Missing 'email' property",
-      input: { password: randomPassword },
+      input: { userPassword: randomPassword },
       expectedStatusCode: 400,
     },
     {
       name: "Missing 'password' property",
       input: {
-        email: randomEmail,
+        userEmail: randomEmail,
       },
       expectedStatusCode: 400,
     },
     {
       name: "Email with incorrect pattern",
       input: {
-        email: "wrong email",
-        password: randomPassword,
+        userEmail: "wrong email",
+        userPassword: randomPassword,
       },
       expectedStatusCode: 400,
     },
     {
       name: "Password with incorrect lenght",
-      input: { email: randomEmail, password: randomWrongPassword },
+      input: { userEmail: randomEmail, userPassword: randomWrongPassword },
       expectedStatusCode: 400,
     },
   ];
