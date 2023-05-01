@@ -1,17 +1,17 @@
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
-const { toUtf8 } = require("@aws-sdk/util-utf8-node");
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import { toUtf8 } from "@aws-sdk/util-utf8-node";
 
 const lambda = new LambdaClient({
   endpoint: "http://127.0.0.1:3001",
   region: "sa-east-1",
 });
 
-module.exports = async (FunctionName, Payload = {}) => {
+const lambdaLocalInvoke = async (FunctionName, Payload = {}) => {
   let response;
   try {
     const input = {
       FunctionName,
-      Payload: JSON.stringify(Payload),
+      Payload: JSON.stringify({ body: Payload }),
     };
 
     const command = new InvokeCommand(input);
@@ -24,3 +24,5 @@ module.exports = async (FunctionName, Payload = {}) => {
     console.log("Response:", response);
   }
 };
+
+export { lambdaLocalInvoke };
